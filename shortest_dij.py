@@ -2,12 +2,17 @@ import string
 import datetime 
 import re 
 import itertools 
+import math 
+import collections 
 
 class Graph(object): 
-    def __init__(self, graph): 
+    def __init__(self, graph, start='a'): 
         self.graph = graph 
         unvisited = ' '.join(string.ascii_letters[0:6]).split()
-        visited = [] 
+        visited = collections.deque()  
+        prev = str() 
+        shortest_distance_from_start = [math.inf] * len(graph[0]) 
+        print(shortest_distance_from_start) 
 
 
     def prnt (self): 
