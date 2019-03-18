@@ -8,10 +8,10 @@ import collections
 class Graph(object): 
     def __init__(self, graph, start='a'): 
         self.graph = graph 
-        self.unvisited = dict(zip(' '.join(string.ascii_letters[0:6]).split(), range(7))) 
+        self.vertices = ' '.join(string.ascii_letters[0:6]).split()
+        self.unvisited = dict(zip(self.vertices, range(7))) 
         self.visited = collections.deque()  
         self.prev = str() 
-        self.shortest_distance_from_start = [math.inf] * len(graph[0]) 
         self.neighbours = dict() 
         self.start = start 
 
@@ -28,6 +28,7 @@ class Graph(object):
             
     def dijkstra(self): 
         vrtices = ' '.join(string.ascii_letters[0:6]).split()
+
         for r in enumerate(vrtices): # note r[1] s a tuple 
             for c in enumerate(vrtices): # note c[1] s a tuple 
                 if (self.graph[r[0]][c[0]] == 0): # no connection 
@@ -39,8 +40,9 @@ class Graph(object):
                     self.neighbours[r[1]].append((c[1], self.graph[r[0]][c[0]])) 
                      
         min_traveled = list() 
+        self.shortest_distance_from_start = dict(zip(self.vertices, [math.inf] * len(self.vertices))) 
 
-        self.shortest_distance_from_start[self.unvisited[self.start]] = 0 
+        self.shortest_distance_from_start[self.start] = 0 
         print(self.shortest_distance_from_start) 
 
         while True: 
