@@ -37,9 +37,24 @@ class Graph(object):
                 else :
                     self.neighbours[r[1]] = list() 
                     self.neighbours[r[1]].append((c[1], self.graph[r[0]][c[0]])) 
+                     
+        min_traveled = list() 
+        start = 'a'
+        count = 0 
 
-        for items in self.neighbours.items(): 
-            print(items) 
+        while True: 
+            try: 
+                smallest_dist = min(self.neighbours[start], key=lambda x: x[1]) 
+                min_traveled.append(start)  
+                if count > len(self.neighbours.keys()): 
+                    break 
+                count += 1 
+                start = smallest_dist[0] 
+            except KeyError: 
+                min_traveled.append(start)  
+                break 
+                 
+        print(min_traveled) 
  
 def main(): 
     
