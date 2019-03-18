@@ -8,12 +8,12 @@ import collections
 class Graph(object): 
     def __init__(self, graph, start='a'): 
         self.graph = graph 
-        self.unvisited = ' '.join(string.ascii_letters[0:6]).split()
+        self.unvisited = dict(zip(' '.join(string.ascii_letters[0:6]).split(), range(7))) 
         self.visited = collections.deque()  
         self.prev = str() 
         self.shortest_distance_from_start = [math.inf] * len(graph[0]) 
         self.neighbours = dict() 
-
+        self.start = start 
 
     def prnt (self): 
         ''' 
@@ -39,19 +39,17 @@ class Graph(object):
                     self.neighbours[r[1]].append((c[1], self.graph[r[0]][c[0]])) 
                      
         min_traveled = list() 
-        start = 'a'
-        count = 0 
+
+        self.shortest_distance_from_start[self.unvisited[self.start]] = 0 
+        print(self.shortest_distance_from_start) 
 
         while True: 
             try: 
-                smallest_dist = min(self.neighbours[start], key=lambda x: x[1]) 
-                min_traveled.append(start)  
-                if count > len(self.neighbours.keys()): 
-                    break 
-                count += 1 
-                start = smallest_dist[0] 
-            except KeyError: 
-                min_traveled.append(start)  
+                smallest_dist = min(self.neighbours[self.start], key=lambda x: x[1]) 
+                min_traveled.append(self.start)  
+                self.start = smallest_dist[0] 
+            except KeyError: # dead end 
+                min_traveled.append(self.start)  
                 break 
                  
         print(min_traveled) 
