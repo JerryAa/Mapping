@@ -27,10 +27,9 @@ class Graph(object):
         return True 
             
     def dijkstra(self): 
-        vrtices = ' '.join(string.ascii_letters[0:6]).split()
 
-        for r in enumerate(vrtices): # note r[1] s a tuple 
-            for c in enumerate(vrtices): # note c[1] s a tuple 
+        for r in enumerate(self.vertices): # note r[1] s a tuple 
+            for c in enumerate(self.vertices): # note c[1] s a tuple 
                 if (self.graph[r[0]][c[0]] == 0): # no connection 
                     continue 
                 if r[1] in self.neighbours.keys(): 
@@ -39,22 +38,23 @@ class Graph(object):
                     self.neighbours[r[1]] = list() 
                     self.neighbours[r[1]].append((c[1], self.graph[r[0]][c[0]])) 
                      
-        min_traveled = list() 
-        self.shortest_distance_from_start = dict(zip(self.vertices, [math.inf] * len(self.vertices))) 
+        path = list() # path when you traverse min distance of each node 
+        self.shortest_distance_from_start = dict(zip(self.vertices, [math.inf] * len(self.vertices)))
 
         self.shortest_distance_from_start[self.start] = 0 
-        print(self.shortest_distance_from_start) 
 
         while True: 
             try: 
                 smallest_dist = min(self.neighbours[self.start], key=lambda x: x[1]) 
-                min_traveled.append(self.start)  
+                path.append(self.start)  
                 self.start = smallest_dist[0] 
+                self.visited.append(self.start) 
             except KeyError: # dead end 
-                min_traveled.append(self.start)  
+                path.append(self.start)  
                 break 
                  
-        print(min_traveled) 
+        print(path) 
+        print(self.shortest_distance_from_start) 
  
 def main(): 
     
