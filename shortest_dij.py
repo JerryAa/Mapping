@@ -11,8 +11,8 @@ class Graph(object):
         self.vertices = ' '.join(string.ascii_letters[0:6]).split()
         self.unvisited = dict(zip(self.vertices, range(7))) 
         self.visited = collections.deque()  
-        self.prev = str() 
-        self.neighbours = dict() 
+        self.prev = dict() 
+        self.neighbors = dict() 
         self.start = start 
 
     def prnt (self): 
@@ -27,37 +27,49 @@ class Graph(object):
         return True 
             
     def dijkstra(self): 
+        self.distance = dict(zip(self.vertices, [math.inf] * len(self.vertices)))
 
         for r in enumerate(self.vertices): # note r[1] s a tuple 
             for c in enumerate(self.vertices): # note c[1] s a tuple 
                 if (self.graph[r[0]][c[0]] == 0): # no connection 
                     continue 
-                if r[1] in self.neighbours.keys(): 
-                    self.neighbours[r[1]].append((c[1], self.graph[r[0]][c[0]])) 
+                if r[1] in self.neighbors.keys(): 
+                    self.neighbors[r[1]].append((c[1], self.graph[r[0]][c[0]])) 
                 else :
-                    self.neighbours[r[1]] = list() 
-                    self.neighbours[r[1]].append((c[1], self.graph[r[0]][c[0]])) 
-                     
-        path = list() # path when you traverse min distance of each node 
-        self.shortest_distance_from_start = dict(zip(self.vertices, [math.inf] * len(self.vertices)))
+                    self.neighbors[r[1]] = list() 
+                    self.neighbors[r[1]].append((c[1], self.graph[r[0]][c[0]])) 
 
-        self.shortest_distance_from_start[self.start] = 0 
 
-        while True: 
-            try: 
-                smallest_dist = min(self.neighbours[self.start], key=lambda x: x[1]) 
-                path.append(self.start)  
-                self.start = smallest_dist[0] 
-                self.visited.append(self.start) 
-            except KeyError: # dead end 
-                path.append(self.start)  
-                break 
+        
+        for vertex in self.vertices: 
+            self.distance[vertex] = math.inf
+            self.visited.append(vertex) 
+            self.prev[vertex] = None 
+
+        self.distance[self.start] = 0 
+        
+        while self.visited:
+            u = min(self.visited, key=lambda vertex: self.distance[vertex])
+            if (u in self.visited):
+                self.visited.remove(u)
+
+            if self.distance[u] == math.inf:
+                break
                  
-        print(path) 
-        print(self.shortest_distance_from_start) 
- 
+            for neighbor in self.neighbors[u]:
+                alt = self.distance[u] + neighbor[1]
+                v = neighbor[0]
+
+                if alt < self.distance[v]:
+                    self.distance[v] = alt
+                    self.prev[v] =u
+     
+
+        print(f'Distance: {self.distance}')
+        print(f'Queue {self.visited}')
+        
 def main(): 
-    
+        
 
     graph = [
            [0, 7, 9, 0, 0, 14],
@@ -65,7 +77,7 @@ def main():
            [0, 0, 0, 11, 0, 2],
            [0, 0, 0, 0, 6, 0],
            [0, 0, 0, 0, 0, 9],
-           [0, 0, 0, 0, 0, 0]] 
+           [0, 0, 0, 0, 0, 1]] 
 
     g = Graph(graph) 
     g.dijkstra() 
