@@ -14,6 +14,7 @@ class Graph(object):
         self.prev = dict() 
         self.neighbors = dict() 
         self.start = start 
+        self.distance = dict(zip(self.vertices, [math.inf] * len(self.vertices)))
 
     def prnt (self): 
         ''' 
@@ -27,7 +28,6 @@ class Graph(object):
         return True 
             
     def dijkstra(self): 
-        self.distance = dict(zip(self.vertices, [math.inf] * len(self.vertices)))
 
         for r in enumerate(self.vertices): # note r[1] s a tuple 
             for c in enumerate(self.vertices): # note c[1] s a tuple 
@@ -40,7 +40,6 @@ class Graph(object):
                     self.neighbors[r[1]].append((c[1], self.graph[r[0]][c[0]])) 
 
 
-        
         for vertex in self.vertices: 
             self.distance[vertex] = math.inf
             self.visited.append(vertex) 
@@ -56,28 +55,31 @@ class Graph(object):
             if self.distance[u] == math.inf:
                 break
                  
-            for neighbor in self.neighbors[u]:
-                alt = self.distance[u] + neighbor[1]
-                v = neighbor[0]
 
-                if alt < self.distance[v]:
-                    self.distance[v] = alt
-                    self.prev[v] =u
-     
+            try: 
+                for neighbor in self.neighbors[u]:
+                    alt = self.distance[u] + neighbor[1]
+                    v = neighbor[0]
+
+                    if alt < self.distance[v]:
+                        self.distance[v] = alt
+                        self.prev[v] =u
+         
+            except KeyError: 
+                continue 
 
         print(f'Distance: {self.distance}')
-        print(f'Queue {self.visited}')
-        
+         
+        return self.distance 
+         
 def main(): 
-        
-
     graph = [
            [0, 7, 9, 0, 0, 14],
            [0, 0, 10, 15, 0, 0],
            [0, 0, 0, 11, 0, 2],
            [0, 0, 0, 0, 6, 0],
            [0, 0, 0, 0, 0, 9],
-           [0, 0, 0, 0, 0, 1]] 
+           [0, 0, 0, 0, 0, 0]] 
 
     g = Graph(graph) 
     g.dijkstra() 
